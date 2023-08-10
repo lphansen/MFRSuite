@@ -142,27 +142,27 @@ def createMatrixInner(stateMat, upperLims, lowerLims, S, N, dVec, increVec, sigm
 
                 if ( (not natural) and (not corner) ):
                     ####If not using natural bdries, set as specified
+                    vals.append( level[0,n] + first[0,n] / dVec[0,n] + second[0,n] / (dVec[0,n] ** 2) )
+                    rowInd.append( i ); colInd.append( i );
 
-                    if n == N - 1:
-                        vals.append( level[0,0] + first[0,n] / dVec[0,n])
-                        rowInd.append( i ); colInd.append( i );
-                    else:
-                        vals.append(first[0,n] / dVec[0,n])
-                        rowInd.append( i ); colInd.append( i );
-
-                    vals.append( -first[0,n] / dVec[0,n] )
+                    vals.append( -first[0,n] / dVec[0,n] - 2 * second[0,n] / (dVec[0,n] ** 2) )
                     rowInd.append( i ); colInd.append( i - increVec[0,n] );
 
-                    print(1)
+                    vals.append( second[0,n] / (dVec[0,n] ** 2) )
+                    rowInd.append( i ); colInd.append( i - 2 * increVec[0,n] );
+
 
                 elif (natural):
                     ####If natural, use natural bdries
 
-                    vals.append(firstCoefs[i,n] / dVec[0,n])
+                    vals.append(firstCoefs[i,n] / dVec[0,n] + secondCoefs[i,n] / (dVec[0,n] ** 2))
                     rowInd.append( i ); colInd.append( i );
 
-                    vals.append( - firstCoefs[i,n] / dVec[0,n])
+                    vals.append( - firstCoefs[i,n] / dVec[0,n] - 2.0 * secondCoefs[i,n] / (dVec[0,n] ** 2))
                     rowInd.append( i ); colInd.append( i - increVec[0,n] );
+
+                    vals.append( secondCoefs[i,n] / (dVec[0,n] ** 2) )
+                    rowInd.append(i); colInd.append( i - 2 * increVec[0,n] );
 
 
             elif ( abs((stateMat[i,n] - lowerLims[0,n])) < (dVec[0,n] / 2.0) ): ####Lower boundary
@@ -170,24 +170,25 @@ def createMatrixInner(stateMat, upperLims, lowerLims, S, N, dVec, increVec, sigm
 
                 if ( (not natural) and (not corner) ):
                     ####If not using natural bdries, set as specified
-                    if n == N - 1:
-                        vals.append( level[0,0] - first[0,n] / dVec[0,n] )
-                        rowInd.append( i ); colInd.append( i );
-                    else:
-                        vals.append(- first[0,n] / dVec[0,n] )
-                        rowInd.append( i ); colInd.append( i );
+                    vals.append( level[0,n] - first[0,n] / dVec[0,n] + second[0,n] / (dVec[0,n] ** 2) )
+                    rowInd.append( i ); colInd.append( i );
 
-                    vals.append( first[0,n] / dVec[0,n] )
+                    vals.append( first[0,n] / dVec[0,n] - 2 * second[0,n] / (dVec[0,n] ** 2) )
                     rowInd.append( i ); colInd.append( i + increVec[0,n]);
+
+                    vals.append(second[0,n] / (dVec[0,n] ** 2));
+                    rowInd.append( i ); colInd.append( i + 2 * increVec[0,n] );
 
                 elif (natural):
                     ####If natural, use natural bdries
-                    vals.append( - firstCoefs[i,n] / dVec[0,n])
+                    vals.append( - firstCoefs[i,n] / dVec[0,n] + secondCoefs[i,n] / (dVec[0,n] ** 2) )
                     rowInd.append(i); colInd.append(i);
 
-                    vals.append( firstCoefs[i,n] / dVec[0,n])
+                    vals.append( firstCoefs[i,n] / dVec[0,n] - 2.0 * secondCoefs[i,n] / (dVec[0,n] ** 2))
                     rowInd.append(i); colInd.append(i + increVec[0,n]);
 
+                    vals.append( secondCoefs[i,n] / (dVec[0,n] ** 2) )
+                    rowInd.append( i ); colInd.append( i + 2 * increVec[0,n] );
             ####Reduce n by 1 so that the while loop can end####
             n = n - 1
             ####################################################
